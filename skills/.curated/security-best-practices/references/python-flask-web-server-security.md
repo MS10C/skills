@@ -273,7 +273,7 @@ Required:
   - Avoid `Markup(...)` on user data.
   - Avoid Jinja `|safe` on user-controlled content.
 - MUST quote HTML attributes containing Jinja expressions (`value="{{ x }}"` not `value={{ x }}`).
-- MUST NOT serve uploaded HTML as active HTML; serve as download (`Content-Disposition: attachment`) or transform to a safe format. Note: This is only relevant if it is possible to upload document content such as html, js, css, etc. If it purely is image files, there is no concern.
+- MUST NOT serve uploaded HTML as active HTML; serve as download (`Content-Disposition: attachment`) or transform to a safe format. Note: This is only relevant if it is possible to upload document content such as html, js, css, etc. Active image formats such as SVG count as document content, because they can execute script when opened directly as a same-origin document. Only uploads restricted to validated passive raster formats (e.g. PNG, JPEG, GIF, WebP) with safe delivery (content type from your own validation, `X-Content-Type-Options: nosniff`) are of no concern.
 - SHOULD deploy a Content Security Policy (CSP) to mitigate XSS classes (including `javascript:` in `href`).
 
 Insecure patterns:
@@ -285,7 +285,7 @@ Insecure patterns:
 Detection hints:
 - Search for `Markup(` and investigate origin of the data.
 - Search template files for `|safe`, `|tojson` misuse, and unquoted attributes.
-- Review file-serving routes that might return user uploads without `as_attachment=True`. Note: This is only relevant if it is possible to upload document content such as html, js, css, etc. If it purely is image files, there is no concern.
+- Review file-serving routes that might return user uploads without `as_attachment=True`. Note: This is only relevant if it is possible to upload document content such as html, js, css, etc. Treat SVG and other active image formats as document content; only validated passive raster formats served with safe headers are of no concern.
 
 Fix:
 - Remove unsafe marking; sanitize only when strictly necessary using a trusted HTML sanitizer.

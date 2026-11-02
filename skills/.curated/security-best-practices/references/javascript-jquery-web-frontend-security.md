@@ -435,7 +435,7 @@ Detection hints:
 
 Fix:
 
-* Add CSRF token inclusion in a centralized place, e.g., `$.ajaxSetup({ headers: { "X-CSRF-Token": token } })`, and ensure server verifies.
+* Add CSRF token inclusion in a centralized place, limited to same-origin requests, e.g. `$.ajaxPrefilter(function (options, originalOptions, jqXHR) { if (!options.crossDomain) { jqXHR.setRequestHeader("X-CSRF-Token", token); } })`, and ensure server verifies. Do not use a global `$.ajaxSetup({ headers: ... })` for this: it also sends the token to third-party origins that allow the header via CORS.
 * Follow OWASP CSRF guidance for token properties and validation. ([OWASP Cheat Sheet Series][19])
 
 False positive notes:

@@ -554,7 +554,7 @@ Fix:
 - If a shell is unavoidable, escape robustly and treat as high risk (prefer avoiding).
 
 Notes:
-- The Go `os/exec` package intentionally does invoke a shell; introducing `sh -c` reintroduces shell injection hazards.
+- The Go `os/exec` package intentionally does not invoke a shell; passing a command and separate args to `exec.CommandContext` is safe from shell injection, and introducing `sh -c` reintroduces shell injection hazards.
 
 ---
 
